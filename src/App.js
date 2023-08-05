@@ -11,10 +11,48 @@ const initialItems = [
 
 export default function App(){
 
+  const [items,setItems]=useState([])
+
+
+
+
+
+
+
+
+
+
+  function handleAddItems(item){
+    setItems(items=>[...items,item])
+  }
+
+
+
+  function handleDeleteItem(id){
+    setItems(items=>items.filter(item=>item.id !== id))
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return <div className="app">
     <Logo/>
-    <Form/>
-    <PackingList/>
+    <Form onAddItems={handleAddItems}/>
+    <PackingList onDelteItem={handleDeleteItem} items={items}/>
     <Stats/>
   </div>
 
@@ -28,11 +66,9 @@ function Logo(){
 
 }
 
-function Form(){
+function Form({onAddItems}){
   const [description,setDescription]=useState("")
   const [selection,setSelection]=useState("")
-
-
 
 
 
@@ -58,8 +94,9 @@ function Form(){
 
     const newItem={description,Selection,packed:false,id:Date.now()}
 
+    console.log(newItem)    
 
-    
+    onAddItems(newItem)
 
     setDescription("")
     setSelection(1)
@@ -116,13 +153,12 @@ function Form(){
 
 
 
-
-function PackingList(){
+function PackingList({items,onDelteItem}){
   return (
 
     <div className="list">
       <ul className="list">
-        {initialItems.map(item=><Item item={item}  key={item.id} />)}
+        {items.map(item=><Item item={item}  key={item.id} onDelteItem={onDelteItem}/>)}
       </ul>
     </div>
 
@@ -131,7 +167,7 @@ function PackingList(){
 }
 
 
-function Item({item}){
+function Item({item,onDelteItem}){
   return (
 
     <li>
@@ -139,7 +175,7 @@ function Item({item}){
         {item.quantity} {item.description}
       </span>
 
-      <button>❌</button>
+      <button onClick={()=>onDelteItem(item.id)}>❌</button>
     </li>
   )
 }
